@@ -1,14 +1,13 @@
 "use client"
 
-import SidebarNav from '@/components/SidebarNav'
-import React, { useContext, useEffect, useState } from 'react'
-import InputLabel from '@mui/material/InputLabel';
+import React, { useEffect, useState } from 'react'
+
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Button from '@/components/ui/Button';
 import ButtonEmpty from '@/components/ui/ButtonEmpty';
-import { InputAdornment, OutlinedInput, TextField } from '@mui/material';
+import { InputAdornment, OutlinedInput } from '@mui/material';
 import Image from 'next/image';
 import { useFormContext } from '@/contexts/TransactionForm';
 import { authService } from '@/services';
@@ -33,12 +32,16 @@ function Step1Form() {
 
 
     const [prices, setPrices] = useState<any>();
+    const [balance, setBalance] = useState<number>();
 
     useEffect(() => {
         const fetchData = async () => {
             const responsePrices = await authService.getGetPrices();
             console.log(responsePrices?.data)
             setPrices(responsePrices?.data);
+
+            const responseUser = await authService.getUser();
+            setBalance(responseUser?.data.data.attributes.balances.usd)
         }
 
         fetchData();
@@ -88,7 +91,7 @@ function Step1Form() {
         <div className='px-48 py-20 min-h-screen flex flex-col justify-between'>
             <div className="mb-10 w-1/2">
                 <h1 className='text-4xl font-semibold mb-10'>¿Que deseas intercambiar?</h1>
-                <p className='text-secondary font-semibold mb-20' >Saldo disponible SALDO_USUARIO CLP</p>
+                <p className='text-secondary font-semibold mb-20' >Saldo disponible {balance} CLP</p>
 
                 <p className='text-base mb-5'>Monto a intercambiar</p>
 

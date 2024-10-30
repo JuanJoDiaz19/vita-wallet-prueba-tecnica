@@ -1,9 +1,7 @@
 "use client"
 
-import SidebarNav from '@/components/SidebarNav'
 import CurrencyBox from '@/components/ui/CurrencyBox'
 import { authService } from '@/services'
-import { AuthService } from '@/services/auth.service'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
@@ -76,8 +74,8 @@ function Page() {
       </div>
       <h3 className='text-2xl font-normal mb-5'>Historial</h3>
       {
-        transactions?.map(transaction =>
-          <div className="flex w-full justify-between p-5 border-b">
+        transactions?.map((transaction, index) =>
+          <div key={index} className="flex w-full justify-between p-5 border-b">
             <p>{transaction.attributes.category_translate}</p>
             <p>$ {transaction.attributes.amount} {transaction.attributes.currency.toUpperCase()}</p>
           </div>
