@@ -13,6 +13,7 @@ import Image from 'next/image';
 import { useFormContext } from '@/contexts/TransactionForm';
 import Modal from '@/components/ui/Modal';
 import { useRouter } from 'next/navigation';
+import { authService } from '@/services';
 
 
 function Step2Form() {
@@ -31,6 +32,16 @@ function Step2Form() {
     const router = useRouter();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleSubmit = async () => {
+        const res = await authService.postTransaction(currencyFrom, currencyTo, ammountExchanged);
+        if (res) {
+            setIsModalOpen(true)
+        } else {
+            alert("Error al hacer la transaccion, volver a intentar mas tarde")
+        }
+    };
+
 
     return (
         <div className='px-48 py-20 min-h-screen flex flex-col justify-between'>
@@ -62,16 +73,16 @@ function Step2Form() {
                 <Button
                     title={step !== 2 ? "Continuar" : "Intercambiar"}
                     onClick={() => {
-                        setIsModalOpen(true)
+                        handleSubmit()
                     }}
                 />
             </div>
             <Modal isOpen={isModalOpen} onClose={() => {
-                    setIsModalOpen(false)
-                    router.push("/inicio")
-                    prevStep()
-                }} >
-                <Image className='w-96 h-96 mb-8' src={'/images/end-transaction.png'} alt={'End transaction image'} width={500} height={500}/>
+                setIsModalOpen(false)
+                router.push("/inicio")
+                prevStep()
+            }} >
+                <Image className='w-96 h-96 mb-8' src={'/images/end-transaction.png'} alt={'End transaction image'} width={500} height={500} />
                 <h2 className='text-2xl font-semibold text-primary mb-6'>¡Intercambio exitoso!</h2>
                 <p>Ya cuentas con los {currencyTo.toUpperCase()} en tu saldo.</p>
             </Modal>

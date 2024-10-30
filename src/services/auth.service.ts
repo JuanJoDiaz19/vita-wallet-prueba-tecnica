@@ -147,4 +147,46 @@ export class AuthService {
             return null;
         }
     }
+
+    postTransaction = async (currencySent: string, currencyReceived: string, ammoutSent: number) => {
+        
+        const cookieString = Cookies.get("currentUserVita")
+
+        try {
+            
+            if (cookieString) {
+                const storedCookie = JSON.parse(cookieString);
+
+                const authHeaders = {
+                    'access-token': storedCookie.accesToken,
+                    'client':  storedCookie.client,
+                    'uid':  storedCookie.uid,
+                    'expiry':  storedCookie.expiry,
+                    'appName': "ANGIE"
+                };
+
+                // Remove any undefined headers
+                const cleanHeaders = Object.fromEntries(
+                    Object.entries(authHeaders).filter(([_, value]) => value !== undefined)
+                );
+
+                console.log(currencySent);
+                console.log(currencyReceived);
+                console.log(ammoutSent);
+
+                const res = await this.instance.post("/transactions/exchange", {
+                    currency_sent: currencySent,
+                    currency_received: currencyReceived,
+                    ammout_sent: ammoutSent 
+                }, {
+                    headers: cleanHeaders
+                });
+                return res;
+            }
+
+        } catch (error) {
+            console.error('Transactions error:', error);
+            return null;
+        }
+    }
 }
