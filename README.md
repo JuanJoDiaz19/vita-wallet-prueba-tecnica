@@ -19,7 +19,7 @@ Este proyecto está construido con Next.js, un framework de React para crear apl
 2. Instala las dependencias del proyecto:
 
    ```bash
-   npm install
+   npm install --force
    ```
 
 ## Configuración
